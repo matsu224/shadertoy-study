@@ -1,2 +1,6 @@
 # macOS metadata
 .DS_Store
+
+# Generated learning-plan files (keep the Markdown source)
+/LEARNING_PLAN*
+!/LEARNING_PLAN.md

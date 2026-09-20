@@ -9,10 +9,20 @@ vec3 render(
     sampler2D channel3
 )
 {
+    // ピクセル座標を0〜1の範囲へ変換する
     vec2 uv = fragCoord / resolution;
-    vec2 p = uv*2.0-1.0;
 
-    return vec3(uv.x, uv.y, 0.0);
+    //vec2 p = uv * 2.0 - 1.0;
+    vec2 p = (fragCoord * 2.0 - resolution) / resolution.y;
+
+    float d = length(p);
+    //d = step(0.5,d);
+    //d = smoothstep(0.3, 0.7, d);
+    float r = 0.5;
+    d = abs(d-r);
+    d = 1.0 - smoothstep(0.1, 0.2, d);
+
+    return vec3(d,d,d);
 }
 
 // --- ここから下だけShaderToy固有 ---

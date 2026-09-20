@@ -23,35 +23,53 @@ ShaderToyで作成したGLSLの練習コードをまとめたリポジトリ。
 学習対象のGLSLとShaderToy固有の処理を分けるため、基本的に次の形式で記述する。
 
 ```glsl
-vec3 render(vec2 fragCoord, vec2 resolution)
+vec3 render(
+    vec2 fragCoord,
+    vec2 resolution,
+    float time,
+    vec4 mouse,
+    sampler2D channel0,
+    sampler2D channel1,
+    sampler2D channel2,
+    sampler2D channel3
+)
 {
+    // ピクセル座標を0〜1の範囲へ変換する
+    vec2 uv = fragCoord / resolution;
+
     // ここに学習するGLSLを書く
     return vec3(0.0);
 }
 
-// ここから下だけShaderToy固有
+// --- ここから下だけShaderToy固有 ---
+// mainImage  : ShaderToyのエントリーポイント
+// fragCoord  : 現在のピクセル座標
+// iResolution: 描画領域の解像度
+// iTime      : シェーダーの再生時間
+// iMouse     : マウスの位置やクリック状態
+// iChannel0〜3: テクスチャなどを受け取る入力チャンネル
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-    vec3 color = render(fragCoord, iResolution.xy);
+    vec3 color = render(
+        fragCoord,
+        iResolution.xy,
+        iTime,
+        iMouse,
+        iChannel0,
+        iChannel1,
+        iChannel2,
+        iChannel3
+    );
+
     fragColor = vec4(color, 1.0);
 }
 ```
 
-`render`はこのリポジトリで定める学習用の関数であり、GLSLやShaderToyの組み込み関数ではない。時間、マウス、テクスチャなどが必要な場合も、学習部分から`iTime`、`iMouse`、`iChannel0`を直接参照せず、必要な値を`render`の引数として渡す。
+`uv`はGLSLやShaderToyが自動的に用意する変数ではなく、このリポジトリで使う普通のローカル変数である。`fragCoord`はピクセル単位の座標だが、`resolution`で割ることで、解像度にかかわらず画面の左下をおよそ`(0.0, 0.0)`、右上をおよそ`(1.0, 1.0)`として扱える。
 
-```glsl
-vec3 render(vec2 fragCoord, vec2 resolution, float time)
-{
-    // timeを使ったアニメーション
-    return vec3(0.0);
-}
+`render`はこのリポジトリで定める学習用の関数であり、GLSLやShaderToyの組み込み関数ではない。このリポジトリで使用する可能性がある入力を最初からすべて引数に含め、課題ごとに関数の形を変更しない。使わない引数はそのままでよい。
 
-void mainImage(out vec4 fragColor, in vec2 fragCoord)
-{
-    vec3 color = render(fragCoord, iResolution.xy, iTime);
-    fragColor = vec4(color, 1.0);
-}
-```
+学習部分ではShaderToy固有の名前を直接使わず、`time`、`mouse`、`channel0`〜`channel3`として扱う。ShaderToy固有の`iTime`、`iMouse`、`iChannel0`〜`iChannel3`との対応は、末尾のadapterだけにまとめる。
 
 ## ディレクトリ構成
 

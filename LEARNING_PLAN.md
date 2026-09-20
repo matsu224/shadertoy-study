@@ -48,7 +48,7 @@ ShaderToyを実行環境として使い、標準GLSLの基礎を段階的に学�
 
 - `01_uv_gradient`フォルダを作る
 - READMEの基本テンプレートを`01_uv_gradient/shader.frag`へコピーする
-- `render`関数の中に`vec2 uv = fragCoord / resolution;`を書く
+- テンプレート内の`vec2 uv = fragCoord / resolution;`が、ピクセル座標を0〜1へ変換していることを確認する
 - `return vec3(uv, 0.0);`でUVを色として表示する
 - 表示できたら「実験」の項目を上から1つずつ試す
 
@@ -1100,29 +1100,13 @@ ShaderToyが、
 
 ### GLSLとして考える
 
-学習コード側では、
+基本テンプレートでは、ShaderToy固有の`iTime`をadapterから`render`の`time`引数へ最初から渡している。
 
-```glsl
-vec3 render(
-    vec2 fragCoord,
-    vec2 resolution,
-    float time
-)
-```
+学習コード側では、ShaderToy固有の名前ではなく、`render`が受け取る普通の`float time`として扱う。課題09で引数を追加したり、関数の形を変更したりする必要はない。
 
-のように、ただの `float time` として扱う。
+ShaderToy固有部分にある`iTime`と、学習部分にある`time`の対応は次のようになる。
 
-ShaderToy固有部分は最後だけ。
-
-```glsl
-render(
-    fragCoord,
-    iResolution.xy,
-    iTime
-);
-```
-
-こうすれば、
+つまり、
 
 ```text
 iTime

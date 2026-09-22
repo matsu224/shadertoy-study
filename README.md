@@ -117,7 +117,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 * フォルダ名は `番号_テーマ名` の形式
 * `shader.frag` にShaderToyで使用したGLSLコードを保存
-* `preview.png` に実行結果を保存
+* 静止画は`preview.png`、アニメーションは`preview.mp4`として実行結果を保存
 * 必要な場合のみ補足ファイルを追加
 
 フォルダ番号は学習・作成した順番を表す。
